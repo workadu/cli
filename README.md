@@ -39,9 +39,25 @@ npm install -g .
 
 ## 💻 Commands & Usage
 
-Once installed, the `workadu` command becomes available globally on your terminal.
+Once installed, the `workadu` command becomes available globally on your terminal. You can always view the available commands by running:
+```bash
+workadu --help
+```
 
-### 1. Deploy a Page
+### 1. Connect API Key
+Before deploying, you must connect the CLI to your Workadu account using your API key.
+
+**Syntax:**
+```bash
+workadu connect <api_key>
+```
+**Example:**
+```bash
+workadu connect wk_WonV6a437d35e3628
+```
+*This command saves your API key securely to a local configuration file.*
+
+### 2. Deploy a Page
 The main command to compile, translate, and deploy a page to your Workadu environment.
 
 **Syntax:**
@@ -62,6 +78,7 @@ workadu deploy https://example.com/promo
 | Option | Description |
 |--------|-------------|
 | `--page-id <id>` | The target Workadu Page ID where the content will be deployed. If omitted, the CLI will create a **new page** automatically. |
+| `--api-url <url>`| Manually set the Workadu API endpoint (overrides the default or `WORKADU_API_URL` env variable). |
 
 ### Deployment Process Flow
 When you run `workadu deploy`:
@@ -72,7 +89,7 @@ When you run `workadu deploy`:
 3. **Asset Inlining**: Any `<link rel="stylesheet">` or external `<script src="...">` with relative paths are downloaded and compiled directly into your HTML payload.
 4. **CSS Corrections**: `rem` units inside `<style>` tags or inline `style=""` attributes are automatically converted to `px`. Specific CSS resets are injected to prevent Workadu's core styles from affecting your typography.
 5. **Translations (Optional)**: If a `translations.js` file exists in the deployment directory, the CLI replaces `data-i18n` tags with their respective localized strings.
-6. **API Sync**: The compiled HTML payloads for all languages are sent securely to your Workadu project via the Workadu MCP Server/API.
+6. **API Sync**: The compiled HTML payloads for all languages are sent securely to your Workadu project.
 
 ---
 
