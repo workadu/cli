@@ -145,7 +145,7 @@ if (command === 'deploy') {
     let slug = null;
     
     for (let i = 2; i < args.length; i++) {
-        if (args[i] === '--page-id') pageId = args[i+1];
+        if (args[i] === '--page-id' || args[i] === '--page_id') pageId = args[i+1];
         if (args[i] === '--api-url') customApiUrl = args[i+1];
         if (args[i] === '--slug') slug = args[i+1];
     }
@@ -232,7 +232,18 @@ async function runDeploy(baseHtmlContent, token, pageId, apiUrl, deployType, slu
         let $ = cheerio.load(baseHtmlContent);
         
         // Find supported languages
-        const targetLangs = ['el_GR', 'en_GB', 'es_ES', 'it_IT'];
+        let targetLangs = ['en_GB'];
+        let translationsData = null;
+        const translationsPath = path.resolve(process.cwd(), 'translations.js');
+        if (fs.existsSync(translationsPath)) {
+            const translationsConfig = require(translationsPath);
+            if (translationsConfig && translationsConfig.targetLangs) {
+                targetLangs = translationsConfig.targetLangs;
+            }
+            if (translationsConfig && translationsConfig.translations) {
+                translationsData = translationsConfig.translations;
+            }
+        }
         
         for (const locale of targetLangs) {
             console.log(`⏳ Deploying language: ${locale} ...`);
@@ -240,6 +251,22 @@ async function runDeploy(baseHtmlContent, token, pageId, apiUrl, deployType, slu
             $ = cheerio.load(baseHtmlContent);
             $('#langSwitch').remove();
             $('.reveal').removeClass('reveal active delay-1 delay-2 delay-3');
+            
+            // Apply translations if available
+            if (translationsData && translationsData[locale]) {
+                const langDict = translationsData[locale];
+                $('[data-i18n]').each((i, el) => {
+                    const key = $(el).attr('data-i18n');
+                    if (langDict[key]) {
+                        // Special handling for inputs with placeholder
+                        if (el.tagName.toLowerCase() === 'input' || el.tagName.toLowerCase() === 'textarea') {
+                            $(el).attr('placeholder', langDict[key]);
+                        } else {
+                            $(el).html(langDict[key]);
+                        }
+                    }
+                });
+            }
             
             // Fix inline styles with rem to px (Workadu builder root font size fix)
             $('[style]').each((i, el) => {
