@@ -442,6 +442,11 @@ let styles = `
                         innerHtml = $el.html();
                     }
                     
+                    // If the HTML does not already contain a Bootstrap row, wrap it so Innova Builder can edit it!
+                    if (!innerHtml.includes('class="row"') && !innerHtml.includes("class='row'")) {
+                        innerHtml = `<div class="row">\n    <div class="col-md-12">\n${innerHtml}\n    </div>\n</div>`;
+                    }
+                    
                     if (!stylesInjected && styles) {
                         // Wrap styles in a row so Innova builder DOM parser doesn't crash expecting columns
                         innerHtml = `<div class="row" style="display:none;"><div class="col-md-12">${styles}</div></div>\n` + innerHtml;
