@@ -459,13 +459,40 @@ let styles = `
                     
                     let innerHtml = '';
                     const $container = $el.find('.container').first();
-                    if ($container.length > 0) {
-                        innerHtml = $container.html();
-                    } else {
-                        innerHtml = $el.html();
-                    }
+                    let $contentToWrap = $container.length > 0 ? $container : $el;
                     
-                    // If the HTML does not already contain a Bootstrap row, wrap it so Innova Builder can edit it!
+                    // --- AUTO-BOOTSTRAP CONVERTER ---
+                    // Workadu Innova Editor locks text inside custom CSS Grids. 
+                    // To make generic HTML editable, we auto-convert custom grids to Bootstrap rows!
+                    $contentToWrap.find('*').each((idx, node) => {
+                        const $node = $(node);
+                        const className = $node.attr('class') || '';
+                        // If it looks like a custom grid or columns container
+                        if (className.match(/(grid|cards|columns|list-container)/i) && !$node.hasClass('row')) {
+                            $node.addClass('row');
+                            // Override custom CSS grid to prevent Innova Builder from locking text editing
+                            let existingStyle = $node.attr('style') || '';
+                            $node.attr('style', existingStyle + (existingStyle.endsWith(';') ? '' : '; ') + 'display: flex !important; flex-wrap: wrap !important;');
+                            
+                            const $children = $node.children('div, section, article');
+                            const count = $children.length;
+                            if (count > 0) {
+                                let colSize = 12;
+                                if (count % 4 === 0) colSize = 3;
+                                else if (count % 3 === 0) colSize = 4;
+                                else if (count % 2 === 0) colSize = 6;
+                                else colSize = count > 4 ? 4 : 12; // Fallback to 3 columns for many items
+                                
+                                $children.each((j, child) => {
+                                    $(child).addClass(`col-md-${colSize}`);
+                                });
+                            }
+                        }
+                    });
+                    
+                    innerHtml = $contentToWrap.html();
+                    
+                    // If the HTML does not already contain a Bootstrap row at the root, wrap it so Innova Builder can edit it!
                     if (!innerHtml.includes('class="row"') && !innerHtml.includes("class='row'")) {
                         innerHtml = `<div class="row">\n    <div class="col-md-12">\n${innerHtml}\n    </div>\n</div>`;
                     }
