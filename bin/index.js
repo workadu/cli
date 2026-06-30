@@ -88,15 +88,35 @@ function makeRequest(urlStr, method = 'GET', payload = null, token = null) {
 const args = process.argv.slice(2);
 const command = args[0];
 
-if (!command) {
+function showHelp() {
     console.log(`
-Usage:
-  workadu connect <api_key>      - Save your Workadu API Key
-  workadu deploy <file_path>     - Deploy an HTML file to Workadu Pages
-    [--page-id <id>]             - Deploy to a specific Page ID
-    [--api-url <url>]            - Override the Workadu API URL (defaults to http://workadu.local/api)
+🚀 Workadu CLI v1.0.0
+
+Usage: workadu <command> [options]
+
+Commands:
+  connect <api_key>          Save your Workadu API Key securely for deployments.
+                             Example: workadu connect wk_abc123
+
+  deploy <path_or_url>       Deploy an HTML file or a live URL to Workadu Pages.
+                             Example: workadu deploy ./public/landing.html
+                             Example: workadu deploy https://example.com/promo
+
+Options for 'deploy':
+  --page-id <id>             Deploy to an existing Workadu Page ID.
+                             If omitted, a new page is automatically created.
+  --slug <slug>              Define a custom URL slug when creating a new page.
+  --api-url <url>            Override the API URL (defaults to http://workadu.local/api
+                             or the WORKADU_API_URL environment variable).
+
+Global Options:
+  -h, --help                 Display this help message and exit.
     `);
     process.exit(0);
+}
+
+if (!command || command === '--help' || command === '-h' || command === 'help') {
+    showHelp();
 }
 
 if (command === 'connect') {
