@@ -78,6 +78,7 @@ workadu deploy https://example.com/promo
 | Option | Description |
 |--------|-------------|
 | `--page-id <id>` | The target Workadu Page ID where the content will be deployed. If omitted, the CLI will create a **new page** automatically. |
+| `--slug <slug>` | Define a custom URL slug when creating a new page (e.g., `--slug promo-page`). If omitted, a generic AI title is used. |
 | `--api-url <url>`| Manually set the Workadu API endpoint (overrides the default or `WORKADU_API_URL` env variable). |
 
 ### Deployment Process Flow
