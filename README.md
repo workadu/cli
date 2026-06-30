@@ -106,5 +106,5 @@ In your HTML, use the `data-i18n` attribute:
 ---
 
 ## ⚠️ Requirements
-- You must have the [Workadu MCP Server](https://github.com/workadu/mcp-server) running locally or configured properly to accept API deployments.
+- A running instance of the **Workadu Platform** (either locally at `http://workadu.local` or a remote API endpoint). You can set the API endpoint using the `--api-url` flag or the `WORKADU_API_URL` environment variable.
 - Node.js v16+
