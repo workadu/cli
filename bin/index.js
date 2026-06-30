@@ -236,12 +236,35 @@ async function runDeploy(baseHtmlContent, token, pageId, apiUrl, deployType, slu
         let translationsData = null;
         const translationsPath = path.resolve(process.cwd(), 'translations.js');
         if (fs.existsSync(translationsPath)) {
-            const translationsConfig = require(translationsPath);
-            if (translationsConfig && translationsConfig.targetLangs) {
-                targetLangs = translationsConfig.targetLangs;
-            }
-            if (translationsConfig && translationsConfig.translations) {
-                translationsData = translationsConfig.translations;
+            try {
+                // Try requiring it as a CommonJS module first
+                const translationsConfig = require(translationsPath);
+                if (translationsConfig && translationsConfig.targetLangs) {
+                    targetLangs = translationsConfig.targetLangs;
+                    translationsData = translationsConfig.translations;
+                }
+            } catch (e) {
+                // If it fails (e.g. it's a client script like `const translations = { "en": ... }`)
+                // we evaluate it in a VM context.
+                const vm = require('vm');
+                const fileContent = fs.readFileSync(translationsPath, 'utf8');
+                const sandbox = { window: {}, document: {}, navigator: {} };
+                try {
+                    vm.createContext(sandbox);
+                    vm.runInContext(fileContent, sandbox);
+                    if (sandbox.translations) {
+                        const localeMap = { 'en': 'en_GB', 'el': 'el_GR', 'es': 'es_ES', 'it': 'it_IT', 'fr': 'fr_FR', 'de': 'de_DE' };
+                        translationsData = {};
+                        targetLangs = [];
+                        for (const key of Object.keys(sandbox.translations)) {
+                            const workaduLocale = localeMap[key] || key;
+                            targetLangs.push(workaduLocale);
+                            translationsData[workaduLocale] = sandbox.translations[key];
+                        }
+                    }
+                } catch (vmErr) {
+                    console.error('⚠️ Could not parse translations.js. Proceeding with default language only.');
+                }
             }
         }
         
