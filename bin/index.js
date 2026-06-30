@@ -449,7 +449,7 @@ let styles = `
                     }
                     
                     layoutHtml += 
-                    `<div ${elId} class="is-section is-box is-section-100 ${elClass}">\n` +
+                    `<div ${elId} class="is-section is-box is-section-auto ${elClass}">\n` +
                     `    <div class="is-boxes">\n` +
                     `        <div class="is-box-centered">\n` +
                     `            <div class="is-container container-fluid" data-contid="${containerId}"></div>\n` +
