@@ -8,5 +8,20 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.12"
+  },
+  "devDependencies": {
+    "nexe": "^5.0.0-beta.4",
+    "pkg": "^5.8.1"
+  },
+  "scripts": {
+    "build": "pkg . --out-path bin-builds"
+  },
+  "pkg": {
+    "scripts": "bin/**/*.js",
+    "targets": [
+      "node18-win-x64",
+      "node18-macos-x64",
+      "node18-linux-x64"
+    ]
   }
 }

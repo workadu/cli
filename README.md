@@ -19,13 +19,24 @@ It handles advanced HTML parsing, localized translations, dynamic asset fetching
 
 ## 📦 Installation
 
-### Option 1: Install directly from GitHub (Recommended)
+### Option 1: Standalone Binaries (No Node.js Required)
+
+If you do not have Node.js installed, you can simply download the standalone executable for your operating system from the [Releases page](https://github.com/workadu/cli/releases):
+
+1. Go to the [Releases](https://github.com/workadu/cli/releases) page.
+2. Download the binary matching your OS (e.g., `workadu-cli-win.exe` for Windows, `workadu-cli-macos` for Mac).
+3. Place the executable in a folder of your choice (and optionally add it to your system's PATH).
+4. Run it directly from your terminal:
+   - Mac/Linux: `./workadu-cli-macos deploy <path-to-html>`
+   - Windows: `workadu-cli-win.exe deploy <path-to-html>`
+
+### Option 2: Install via NPM (Requires Node.js)
 You can install the CLI globally on your machine straight from the GitHub repository using NPM:
 ```bash
 npm install -g workadu/cli
 ```
 
-### Option 2: Clone and Install Locally
+### Option 3: Clone and Install Locally
 If you want to view the code or contribute:
 ```bash
 git clone https://github.com/workadu/cli.git
