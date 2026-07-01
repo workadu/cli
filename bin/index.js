@@ -106,7 +106,7 @@ Options for 'deploy':
   --page-id <id>             Deploy to an existing Workadu Page ID.
                              If omitted, a new page is automatically created.
   --slug <slug>              Define a custom URL slug when creating a new page.
-  --api-url <url>            Override the API URL (defaults to http://workadu.local/api
+  --api-url <url>            Override the API URL (defaults to https://app.workadu.com/api
                              or the WORKADU_API_URL environment variable).
 
 Global Options:
@@ -141,7 +141,7 @@ if (command === 'deploy') {
     }
     
     let pageId = null;
-    let customApiUrl = process.env.WORKADU_API_URL || 'http://workadu.local/api';
+    let customApiUrl = process.env.WORKADU_API_URL || 'https://app.workadu.com/api';
     let slug = null;
     
     for (let i = 2; i < args.length; i++) {
